@@ -3,8 +3,15 @@
 
 - name: added in 2.4, previously you used 'include'
   import_tasks: redhat.yml
-  when: ansible_os_platform|lower == 'redhat'
+  when: ansible_os_family|lower == 'redhat'
 - import_tasks: debian.yml
-  when: ansible_os_platform|lower == 'debian'
+  when: ansible_os_family|lower == 'debian'
 
-
+- name: Setup sudoers permissions
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers
+    owner: root
+    group: root
+    mode: 0440
+    validate: 'visudo -cf %s'
